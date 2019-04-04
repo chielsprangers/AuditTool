@@ -20,7 +20,7 @@ def initialize(host):
         active_scan(host)
         return get_alerts()
     except:
-        print('WARNING: Make sure Zaproxy is running in Daemon mode with the designated key: {0}'.format(key))
+        print('WARNING: Make sure Zaproxy is running in Daemon mode with the designated standard key: {0}'.format(key))
 
 def spider(host):
     scanid = zap.spider.scan(host)
