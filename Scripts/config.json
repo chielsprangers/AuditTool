@@ -1,0 +1,15 @@
+{
+    "MSFRPC": {
+        "ip": "192.168.2.131",
+        "username": "msf",
+        "password": "msfmsf",
+        "exploitip": "127.0.0.1"
+    },
+    "FuzzDB": {
+
+        "fuzzDBLocation": "../Scripts/fuzzdb"
+    },
+    "ZAProxy": {
+        "key": "change-me-1337"
+    }
+}
