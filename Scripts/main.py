@@ -1,3 +1,5 @@
+import ptvsd
+ptvsd.enable_attach()
 import scancode
 import sys
 import os

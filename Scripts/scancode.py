@@ -13,13 +13,10 @@ def network(target):
     host = "127.0.0.1"
     if "http" in target:
         target = target[target.index('://')+3:]
-        print(target)
-    #print("Start network scanning")
     retdata["ip"] = target
     nmapdata = nmapscan.initiate(target)
     retdata["nmapdata"] = nmapdata
     if nmapdata is None:
-        #print('Nmap scan returned no open ports.')
         sys.exit()
     target = config['MSFRPC']['exploitip']
     
@@ -28,15 +25,15 @@ def network(target):
 
 def webapp(host):
     if not 'http' in host:
-        #print('Invalid URL format: {0}'.format(host))
-        #print('Use \'http://target\' or \'https://target\'')
         sys.exit()
-    #print("Started webapp scanning")
     whatweb.initiate(host)
     links = dirb.initialize(host)
-    #print(links)
     zaproxy.initialize(host)
+    
+    linkid=0
+    print("{")
     for link in links:
-        if bruteforce.check_login_form(links):
-            print(link)
+        print("'{}':'{}',".format(linkid, link))
+        linkid = linkid + 1
             # Bruteforce these links manually with hydra or BurpSuite
+    print("}")

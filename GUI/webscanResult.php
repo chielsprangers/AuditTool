@@ -3,15 +3,16 @@
 ?>
 
 <?php
-    $ips;
+    $URL;
 
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if (!empty($_POST["URL"])) {
-            $ips = test_input($_POST["URL"]);
+            $URL = test_input($_POST["URL"]);
+            if (!empty($_POST["URLLogin"])) {
+                $URLLogin = test_input($_POST["URLLogin"]);
+            }
 
-            shell_exec("export LC_ALL=C.UTF-8");
-            shell_exec("export LANG=C.UTF-8");
-            $command = sprintf('export LC_ALL=C.UTF-8 && export LANG=C.UTF-8 && sudo /usr/bin/python3 ../Scripts/main.py webscan -h "%s" 2>&1', $ips);
+            $command = sprintf('export LC_ALL=C.UTF-8 && export LANG=C.UTF-8 && sudo /usr/bin/python3 ../Scripts/main.py webscan -h "%s" 2>&1', $URL);
             $output = shell_exec($command);
         } else {
             echo("<h3>No URL found, Please try again.</h3>");
@@ -35,7 +36,6 @@
         return $data;
     }
 ?>
-
 
 <?php
     include 'footer.php';
