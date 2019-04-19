@@ -1,8 +1,11 @@
 import sys
 import os
 import json
+from datetime import datetime
 import nmapscan, msf
 import dirb, whatweb, zaproxy, bruteforce
+from owaspzap import owaspzap
+from loginauthmethod import loginauthmethod
 
 with open('../Scripts/config.json') as json_data_file:
     config = json.load(json_data_file)
@@ -28,12 +31,27 @@ def webapp(host):
         sys.exit()
     whatweb.initiate(host)
     links = dirb.initialize(host)
-    zaproxy.initialize(host)
     
-    linkid=0
-    print("{")
-    for link in links:
-        print("'{}':'{}',".format(linkid, link))
-        linkid = linkid + 1
-            # Bruteforce these links manually with hydra or BurpSuite
-    print("}")
+    target = "http://192.168.2.131/dvwa/"
+    loginurl = "http://192.168.2.131/dvwa/login.php"
+    username = "qwer"
+    password = "1234"
+    contextregex = "\Qhttp://192.168.2.131/dvwa\E.*"
+    authmethod = loginauthmethod.FORM_BASED_AUTHENTICATION
+    loggedinindicator = "Ingelogd!!!"
+    loggedoutindicator = "Wrong username or password"
+
+    zap = owaspzap()
+
+
+    zap.initialize(str(datetime.now()), target, contextregex)
+    zap.authenticate(loginurl, username, password, loggedinindicator, loggedoutindicator, authmethod)
+    zap.spider(target)
+    zap.passive_scan()
+    zap.active_scan(target)
+    print(zap.get_alerts())
+
+
+    #print(str(zap))
+    zap.context_remove()
+    

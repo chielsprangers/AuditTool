@@ -10,11 +10,13 @@ with open(Path('../Scripts/config.json'), 'r') as f:
 key = config['ZAProxy']['key']
 zap = ZAPv2(apikey=key)
 authIsSet = False
-context = ""
+contextname = ""
+contextid = None
+userid = None
 
 def initialize(host):
-    context = "testing"
-    contextid = zap.context.new_context(context, apikey=key)
+    contextname = "appels"
+    contextid = zap.context.new_context(contextname, apikey=key)
     print (contextid)
     
     try:
@@ -27,30 +29,37 @@ def initialize(host):
         active_scan(host)
         
         return get_alerts()
-    except:
-        zap.context.remove_context(context, apikey=key)
+    except Exception as e:
+        print (e)
+        zap.context.remove_context(contextname, apikey=key)
         print('WARNING: Make sure Zaproxy is running in Daemon mode with the designated key: {0}'.format(key))
 
 def authentication(loginUrl):
     authmethodname = 'formBasedAuthentication'
     authmethodconfigparams = "".join('loginUrl=https://192.168.2.131/dvwa/login.php' '&loginRequestData=username%3D%7B%25username%25%7D%26' 'password%3D%7B%25password%25%7D')
 
-    print ("AA1" + zap.context.include_in_context(context, 'https%3A%2F%2F192.168.2.131%2Fdvwa%2F%2A', apikey=key))
-    print ("AA1.5")
-    print ("AA2" + zap.context.context(context, apikey=key))
+    print ("<br/>AA1" + zap.context.include_in_context(contextname, 'https%3A%2F%2F192.168.2.131%2Fdvwa%2F%2A', apikey=key))
+    print("<br/>")
+    print("contextname:  " + contextname)
+    print("<br/>")
+    print("contextid: " + contextid)
+    print("<br/>")
+    print ("<br/>AA1.5")
+    print ("<br/>AA2" + zap.context.context(contextname))
+    print ("<br/>AA2.5")
+    print ("<br/>AA3" + zap.authentication.set_authentication_method(contextid, authmethodname, authmethodconfigparams))
 
-    print ("AA3" + zap.authentication.set_authentication_method(contextid, authmethodname, authmethodconfigparams, apikey=key))
+    print ("<br/>AA4" + zap.authentication.set_logged_in_indicator(contextid, loggedinindicatorregex='Ingelogd!!!'))
+    print ("<br/>AA5" + zap.authentication.set_logged_out_indicator(contextid, 'Wrong username or password'))
 
-    print ("AA4" + zap.authentication.set_logged_in_indicator(contextid, loggedinindicatorregex='Ingelogd!!!', apikey=key))
-    print ("AA5" + zap.authentication.set_logged_out_indicator(contextid, 'Wrong username or password', apikey=key))
-
-    userid = zap.users.new_user(contextid, 'User 1', apikey=key)
-    print ("AA6" + userid)
-    print ("AA7" + zap.users.set_authentication_credentials(contextid, userid, 'username=admin&password=password', apikey=key))
-    print ("AA8" + zap.users.set_user_enabled(contextid, userid, True, apikey=key))
+    userid = zap.users.new_user(contextid, 'User 1')
+    print ("<br/>AA6" + userid)
+    print ("<br/>AA7" + zap.users.set_authentication_credentials(contextid, userid, 'username=admin&password=password'))
+    print ("<br/>AA8<br/>" + zap.users.set_user_enabled(contextid, userid, True))
 
 
 def spider(host):
+    scanid = None
     if(authIsSet):
         scanid = zap.spider.scan_as_user(contextid, userid, host)
     else:
