@@ -31,6 +31,7 @@ class owaspzap():
     def initialize(self, contextname, target, contextregex):
         self.contextname = contextname
         self.zap = ZAPv2(apikey=self.key)
+        self.zap.core.new_session(apikey=self.key)
         self.contextid = self.zap.context.new_context(contextname=self.contextname, apikey=self.key)
         self.target = target
         self.contextregex = contextregex
@@ -46,11 +47,9 @@ class owaspzap():
             self.loginurl = loginurl
             self.username = username
             self.password = password
-            self.authisset = True
             self.authmethod = authmethod
             self.loggedinindicator = loggedinindicator
             self.loggedoutindicator = loggedoutindicator
-
             
             self.authmethodconfigparams = "loginUrl={0}&loginRequestData=username%3D%7B%25{1}%25%7D%26password%3D%7B%25{2}%25%7D".format(loginurl, username, password)
 
@@ -63,6 +62,8 @@ class owaspzap():
             self.zap.users.set_authentication_credentials(self.contextid, self.userid, self.credentials, apikey=self.key)
             self.zap.users.set_user_enabled(self.contextid, self.userid, "true", apikey=self.key)
             self.zap.forcedUser.set_forced_user_mode_enabled(True, apikey=self.key)
+
+            self.authisset = True
 
         else:
             print("Please specify authmethod.")

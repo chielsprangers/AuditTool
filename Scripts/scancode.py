@@ -43,7 +43,6 @@ def webapp(host):
 
     zap = owaspzap()
 
-
     zap.initialize(str(datetime.now()), target, contextregex)
     zap.authenticate(loginurl, username, password, loggedinindicator, loggedoutindicator, authmethod)
     zap.spider(target)
@@ -51,7 +50,5 @@ def webapp(host):
     zap.active_scan(target)
     print(zap.get_alerts())
 
-
-    #print(str(zap))
     zap.context_remove()
     
