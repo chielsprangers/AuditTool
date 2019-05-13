@@ -33,13 +33,14 @@ class owaspzap():
         self.zap = ZAPv2(apikey=self.key)
         self.zap.core.new_session(apikey=self.key)
         self.contextid = self.zap.context.new_context(contextname=self.contextname, apikey=self.key)
+
         self.target = target
         self.contextregex = contextregex
 
         if(self.zap.core.alerts()):
-            self.zap.core.delete_all_alerts(apikey=self.key)
-            self.zap.context.include_in_context(self.contextname, self.contextregex, apikey=self.key)
-
+            self.zap.core.delete_all_alerts(apikey=self.key)    
+        self.zap.context.include_in_context(self.contextname, self.contextregex, apikey=self.key)
+        
         self.zap.urlopen(self.target)
 
     def authenticate(self, loginurl, username, password, loggedinindicator, loggedoutindicator, authmethod):
@@ -51,10 +52,12 @@ class owaspzap():
             self.loggedinindicator = loggedinindicator
             self.loggedoutindicator = loggedoutindicator
             
-            self.authmethodconfigparams = "loginUrl={0}&loginRequestData=username%3D%7B%25{1}%25%7D%26password%3D%7B%25{2}%25%7D".format(loginurl, username, password)
+            #self.authmethodconfigparams = "loginUrl={0}&loginRequestData=username%3D%7B%25{1}%25%7D%26password%3D%7B%25{2}%25%7D".format(loginurl, username, password)
+            self.authmethodconfigparams = "hostname={0}&realm={1}&port=80".format(loginurl, "Secret page")
 
             self.authmethodname = self.authmethod.value
             self.zap.authentication.set_authentication_method(self.contextid, self.authmethodname, authmethodconfigparams=self.authmethodconfigparams, apikey=self.key)
+            self.zap.authentication.set_authentication_method
             self.zap.authentication.set_logged_in_indicator(self.contextid, self.loggedinindicator, apikey=self.key)
             self.zap.authentication.set_logged_out_indicator(self.contextid, self.loggedoutindicator, apikey=self.key)
             self.userid = self.zap.users.new_user(self.contextid, self.username, apikey=self.key)
@@ -92,6 +95,9 @@ class owaspzap():
 
     def get_alerts(self):
         return json.dumps(self.zap.core.alerts())
+    
+    def get_spider(self):
+        return (self.zap.spider.full_results(self.scanid))
 
     def context_remove(self):
         self.zap.context.remove_context(self.contextname, apikey=self.key)

@@ -7,9 +7,9 @@ loginurl = "http://192.168.2.131/dvwa/login.php"
 username = "1234"
 password = "qwer"
 contextregex = "\Qhttp://192.168.2.131/dvwa\E.*"
-authmethod = loginauthmethod.FORM_BASED_AUTHENTICATION
-loggedinindicator = "This page is hidden"
-loggedoutindicator = "Login failed"
+authmethod = loginauthmethod.HTTP_AUTHENTICATION
+loggedinindicator = ".*This page is hidden.*"
+loggedoutindicator = ".*Login failed.*"
 
 zap = owaspzap()
 
@@ -18,6 +18,7 @@ zap.authenticate(loginurl, username, password, loggedinindicator, loggedoutindic
 zap.spider(target)
 zap.passive_scan()
 zap.active_scan(target)
+print(zap.get_spider())
 print(zap.get_alerts())
 
 
