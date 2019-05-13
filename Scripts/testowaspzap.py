@@ -4,15 +4,14 @@ from loginauthmethod import loginauthmethod
 
 target = "http://192.168.2.131/dvwa/"
 loginurl = "http://192.168.2.131/dvwa/login.php"
-username = "qwer"
-password = "1234"
+username = "1234"
+password = "qwer"
 contextregex = "\Qhttp://192.168.2.131/dvwa\E.*"
 authmethod = loginauthmethod.FORM_BASED_AUTHENTICATION
-loggedinindicator = "Ingelogd!!!"
-loggedoutindicator = "Wrong username or password"
+loggedinindicator = "This page is hidden"
+loggedoutindicator = "Login failed"
 
 zap = owaspzap()
-
 
 zap.initialize(str(datetime.now()), target, contextregex)
 zap.authenticate(loginurl, username, password, loggedinindicator, loggedoutindicator, authmethod)
