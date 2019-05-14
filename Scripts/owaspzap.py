@@ -53,7 +53,7 @@ class owaspzap():
             self.loggedoutindicator = loggedoutindicator
             
             #self.authmethodconfigparams = "loginUrl={0}&loginRequestData=username%3D%7B%25{1}%25%7D%26password%3D%7B%25{2}%25%7D".format(loginurl, username, password)
-            self.authmethodconfigparams = "hostname={0}&realm={1}&port=80".format(loginurl, "Secret page")
+            self.authmethodconfigparams = "hostname={0}&realm={1}&port=80".format(loginurl, "")
 
             self.authmethodname = self.authmethod.value
             self.zap.authentication.set_authentication_method(self.contextid, self.authmethodname, authmethodconfigparams=self.authmethodconfigparams, apikey=self.key)
