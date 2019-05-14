@@ -27,6 +27,7 @@ class owaspzap():
     loggedoutindicator = None
     credentials = None
     scanid = None
+    realm = None
 
     def initialize(self, contextname, target, contextregex):
         self.contextname = contextname
@@ -43,7 +44,7 @@ class owaspzap():
         
         self.zap.urlopen(self.target)
 
-    def authenticate(self, loginurl, username, password, loggedinindicator, loggedoutindicator, authmethod):
+    def authenticate(self, loginurl, username, password, loggedinindicator, loggedoutindicator, authmethod, realm):
         if(authmethod != loginauthmethod.NONE):
             self.loginurl = loginurl
             self.username = username
@@ -51,9 +52,10 @@ class owaspzap():
             self.authmethod = authmethod
             self.loggedinindicator = loggedinindicator
             self.loggedoutindicator = loggedoutindicator
+            self.realm = realm
             
             #self.authmethodconfigparams = "loginUrl={0}&loginRequestData=username%3D%7B%25{1}%25%7D%26password%3D%7B%25{2}%25%7D".format(loginurl, username, password)
-            self.authmethodconfigparams = "hostname={0}&realm={1}&port=80".format(loginurl, "")
+            self.authmethodconfigparams = "hostname={0}&realm={1}&port=80".format(self.loginurl, self.realm)
 
             self.authmethodname = self.authmethod.value
             self.zap.authentication.set_authentication_method(self.contextid, self.authmethodname, authmethodconfigparams=self.authmethodconfigparams, apikey=self.key)
